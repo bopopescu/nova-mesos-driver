@@ -16,7 +16,8 @@
 #    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #    License for the specific language governing permissions and limitations
 #    under the License.
-
+# This file is based on RENDLER Mesos framework example
+# Original sources are available at https://github.com/mesosphere/RENDLER/blob/master/python/rendler.py
 
 from collections import deque
 import json
