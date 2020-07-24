@@ -106,7 +106,7 @@ class NovaFramework(Scheduler):
         self.shuttingDown = False
         self.persistent_store = get_persistent_storage()
 
-    def registered(self, driver, frameworkId, masterInfo):
+    def registered(self, driver, frameworkId, mainInfo):
         #TODO(gokrokve) Framework ID should be saved as Mesos uses it for re-regestering
         print "Registered with framework ID [%s]" % frameworkId.value
         zk = getZKStore(ZK_HOSTS)
@@ -122,7 +122,7 @@ class NovaFramework(Scheduler):
         tid = self.tasksCreated
         self.tasksCreated += 1
         task.task_id.value = str(tid).zfill(5)
-        task.slave_id.value = offer.slave_id.value
+        task.subordinate_id.value = offer.subordinate_id.value
         cpus = task.resources.add()
         cpus.name = "cpus"
         cpus.type = mesos_pb2.Value.SCALAR
@@ -244,7 +244,7 @@ class NovaFramework(Scheduler):
 
     def resourceOffers(self, driver, offers):
         self.printStatistics()
-        #TODO(gokrokve) In Kolla-Mesos approach slaves are tagged with special tag (compute, or controller)
+        #TODO(gokrokve) In Kolla-Mesos approach subordinates are tagged with special tag (compute, or controller)
         #Here we need to filter out offers from computes and never touch controller offers
 
         for offer in offers:
@@ -348,7 +348,7 @@ class NovaFramework(Scheduler):
                task.status = 2
                task.state = 0x04 #PowerOFF
 
-    def frameworkMessage(self, driver, executorId, slaveId, message):
+    def frameworkMessage(self, driver, executorId, subordinateId, message):
         o = json.loads(message)
         print "Message: %s" % o
         # if executorId.value == crawlExecutor.executor_id.value:
